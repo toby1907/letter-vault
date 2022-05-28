@@ -39,12 +39,17 @@ class DataRepository(private val letterDao: LetterDao) {
      * Get letters with a filtered state for paging.
      */
     fun getLetters(filter: LetterState): LiveData<PagedList<Letter>> {
-        getLetters(filter)
-        throw NotImplementedError("needs implementation")
+/*val letter = letterDao.getLetters(getFilteredQuery(filter)).toLiveData(
+
+)*/
+
+       throw NotImplementedError("needs implementation")
     }
 
     fun getLetter(id: Long): LiveData<Letter> {
-        throw NotImplementedError("needs implementation")
+      return  letterDao.getLetter(id)
+       // throw NotImplementedError("needs implementation")
+
     }
 
     fun delete(letter: Letter) {
@@ -75,7 +80,7 @@ class DataRepository(private val letterDao: LetterDao) {
     private fun getFilteredQuery(filter: LetterState): SimpleSQLiteQuery {
         val now = System.currentTimeMillis()
         val simpleQuery = StringBuilder()
-            .append("SELECT * FROM letter ")
+            .append("SELECT * FROM `letter.db` ")
 
         if (filter == LetterState.FUTURE) {
             simpleQuery.append("WHERE expires >= $now OR expires <= $now AND opened IS 0")

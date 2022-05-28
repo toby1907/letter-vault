@@ -12,8 +12,8 @@ import androidx.sqlite.db.SupportSQLiteQuery
  */
 @Dao
 interface LetterDao {
-    @Query("SELECT * FROM `letter.db`")
-    fun getLetters(): DataSource.Factory<Int, Letter>
+    @RawQuery(observedEntities = [Letter::class])
+    fun getLetters(query: SupportSQLiteQuery): DataSource.Factory<Int, Letter>
 
     @Query("SELECT * FROM 'letter.db'  WHERE letter_id =:letterId")
     fun getLetter(letterId: Long): LiveData<Letter>
