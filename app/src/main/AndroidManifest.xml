@@ -9,6 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".ui.add.AddLetterActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -20,25 +23,22 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.list.ListActivity"
             android:parentActivityName=".ui.home.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.detail.LetterDetailActivity"
             android:parentActivityName=".ui.list.ListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ui.setting.SettingActivity"
             android:label="@string/settings_activity_name"
             android:parentActivityName=".ui.home.HomeActivity" />
-
     </application>
 
 </manifest>

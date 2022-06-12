@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.developers.lettervault.R
 import com.google.developers.lettervault.data.Letter
+import com.google.developers.lettervault.ui.add.AddLetterActivity
 import com.google.developers.lettervault.ui.detail.LetterDetailActivity
 import com.google.developers.lettervault.ui.list.ListActivity
 import com.google.developers.lettervault.ui.setting.SettingActivity
@@ -63,6 +64,8 @@ class HomeActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
             R.id.action_add -> {
+                val addIntent = Intent(this, AddLetterActivity::class.java)
+                startActivity(addIntent)
                 true
             }
             R.id.action_list -> {
