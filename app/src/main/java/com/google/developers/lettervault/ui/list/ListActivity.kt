@@ -2,22 +2,30 @@ package com.google.developers.lettervault.ui.list
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.developers.lettervault.R
-import com.google.developers.lettervault.ui.detail.LetterDetailActivity
 import com.google.developers.lettervault.ui.setting.SettingActivity
 import com.google.developers.lettervault.util.DataViewModelFactory
-import com.google.developers.lettervault.util.LETTER_ID
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.android.synthetic.main.content_list.*
 
 class ListActivity : AppCompatActivity() {
 
     private lateinit var viewModel: LetterViewModel
+    private  val adapter by lazy {
+        LetterAdapter{
+            viewModel.filter("All")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +37,17 @@ class ListActivity : AppCompatActivity() {
         viewModel = ViewModelProviders.of(this, factory).get(LetterViewModel::class.java)
 
         val pixelSize = resources.getDimensionPixelSize(R.dimen.item_decoration_margin)
-        recycler.addItemDecoration(ItemDecoration(pixelSize))
+        letter_list_recycler_view.addItemDecoration(ItemDecoration(pixelSize))
+//recyclerView = findViewById(R.id.letter_list_recycler_view)
+        viewModel.letters.observe(this){
+            letter_list_recycler_view.adapter =adapter
+            letter_list_recycler_view.layoutManager = LinearLayoutManager(this)
+           adapter.submitList(it)
+
+        }
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_list, menu)
@@ -57,4 +74,7 @@ class ListActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
+
 }

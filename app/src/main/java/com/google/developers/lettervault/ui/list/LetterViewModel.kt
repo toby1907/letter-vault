@@ -15,14 +15,17 @@ import java.util.Locale
  */
 class LetterViewModel(private val dataRepository: DataRepository) : ViewModel() {
 
-    private val filter = MutableLiveData<LetterState>()
-    val letters: LiveData<PagedList<Letter>> = Transformations.switchMap(filter) { input ->
+    private val _filter = MutableLiveData<LetterState>()
+    val letters: LiveData<PagedList<Letter>> = Transformations.switchMap(_filter) { input ->
         dataRepository.getLetters(input)
     }
 
+
+
+
     init {
         // Set default state value.
-        filter.value = LetterState.ALL
+        _filter.value = LetterState.ALL
     }
 
     /**
@@ -33,6 +36,6 @@ class LetterViewModel(private val dataRepository: DataRepository) : ViewModel() 
      */
     fun filter(itemName: String) {
         val letterState = LetterState.valueOf(itemName.toUpperCase(Locale.US))
-        filter.value = letterState
+        _filter.value = letterState
     }
 }

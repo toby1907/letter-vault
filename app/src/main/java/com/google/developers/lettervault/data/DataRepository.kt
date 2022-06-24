@@ -3,6 +3,7 @@ package com.google.developers.lettervault.data
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.paging.Config
+import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -21,6 +22,13 @@ import java.util.concurrent.TimeUnit
 class DataRepository(private val letterDao: LetterDao) {
 
     companion object {
+        const val PAGE_SIZE = 30
+        const val PLACEHOLDERS =  true
+        private val PAGING_CONFIG = PagedList.Config.Builder().apply {
+            setEnablePlaceholders(PLACEHOLDERS)
+            setPageSize(PAGE_SIZE)
+        }.build()
+
         @Volatile
         private var instance: DataRepository? = null
 
@@ -30,7 +38,7 @@ class DataRepository(private val letterDao: LetterDao) {
                     val database = LetterDatabase.getInstance(context)
                     instance = DataRepository(database.letterDao())
                 }
-                return instance
+                return instance as DataRepository
             }
         }
     }
@@ -42,8 +50,9 @@ class DataRepository(private val letterDao: LetterDao) {
 /*val letter = letterDao.getLetters(getFilteredQuery(filter)).toLiveData(
 
 )*/
+        val pagingSource = letterDao.getLetters(getFilteredQuery(filter))
 
-       throw NotImplementedError("needs implementation")
+return LivePagedListBuilder(pagingSource, PAGING_CONFIG).build()
     }
 
     fun getLetter(id: Long): LiveData<Letter> {
@@ -60,6 +69,7 @@ class DataRepository(private val letterDao: LetterDao) {
      * when the letter vault can be opened.
      */
     fun save(letter: Letter) = executeThread {
+        letterDao.insert(letter)
     }
 
     /**

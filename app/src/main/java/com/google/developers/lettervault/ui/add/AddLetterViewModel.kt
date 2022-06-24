@@ -1,6 +1,7 @@
 package com.google.developers.lettervault.ui.add
 
 import android.icu.util.Calendar
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -31,6 +32,7 @@ class AddLetterViewModel(private val dataRepository: DataRepository) : ViewModel
         )
         dataRepository.save(letter)
         _saved.value = Event(true)
+        Log.i("saved", saved.toString())
     }
 
     /**
