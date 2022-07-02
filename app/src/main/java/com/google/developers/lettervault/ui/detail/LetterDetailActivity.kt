@@ -73,7 +73,7 @@ class LetterDetailActivity : AppCompatActivity() {
             lock.visibility = View.GONE
         }
 
-        viewModel.open(letter)
+    viewModel.open(letter)
 
         supportActionBar?.title = getString(R.string.title_opened, simpleDate.format(letter.opened))
         shareIntent?.putExtra(Intent.EXTRA_TEXT, letter.content)

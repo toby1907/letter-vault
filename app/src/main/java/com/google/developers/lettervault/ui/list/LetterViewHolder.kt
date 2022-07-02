@@ -37,11 +37,10 @@ val letterTitle: TextView = itemView.findViewById(R.id.letter_title)
             if (letter.expires < System.currentTimeMillis()) {
                 val ready = context.getString(R.string.letter_ready)
                 letterStatus.text = ready
-                icon.state = UNLOCK
+                icon.state = LOCK
 
             } else {
-                val opening =
-                    context.getString(R.string.letter_opening, simpleDate.format(letter.expires))
+                val opening = context.getString(R.string.letter_opening, simpleDate.format(letter.expires))
             letterStatus.text = opening
                 icon.state = LOCK
             }

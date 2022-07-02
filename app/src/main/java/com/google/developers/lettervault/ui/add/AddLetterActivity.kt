@@ -14,8 +14,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.developers.lettervault.R
 import com.google.developers.lettervault.ui.list.ListActivity
 import com.google.developers.lettervault.util.DataViewModelFactory
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.TimeZone.SHORT
 
 class AddLetterActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener,TimePickerDialog.OnTimeSetListener {
     private lateinit var viewModel: AddLetterViewModel
@@ -26,9 +28,14 @@ class AddLetterActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
     var day = 0
     var month: Int = 0
     var year: Int = 0
+    var setDay = 0
+    var setMonth: Int = 0
+    var setYear: Int = 0
     private  var dueDateInMillis: Long? = null
     var  minute = 0
     var hourOfDay = 0
+    var setMinute = 0
+    var setHourOfDay = 0
     var subject : String = ""
     var content : String = ""
 
@@ -39,14 +46,8 @@ class AddLetterActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         initializeViews()
         val factory = DataViewModelFactory(this)
         viewModel = ViewModelProviders.of(this, factory).get(AddLetterViewModel::class.java)
-        val systemTime = System.currentTimeMillis()
 
-        letterTitle.text.toString().trim()
-
-        val simpleDateFormat = SimpleDateFormat("hh:mm:ss")
-        val date = Date(systemTime)
-        val time = simpleDateFormat.format(date)
-        dueDateTextView.text = time
+        dueDateTextView.text = getString(R.string.set_time_date)
 
         addButton.setOnClickListener {
             addLetter(subject,content)
@@ -110,22 +111,37 @@ class AddLetterActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
 
 
 
-    override fun onDateSet(p0: DatePicker?, p1: Int, p2: Int, p3: Int) {
+    override fun onDateSet(p0: DatePicker?, p1year: Int, p2month: Int, p3dayOfMonth: Int) {
         val calendar = Calendar.getInstance()
-        calendar.set(year, month, day)
+      setYear = p1year
+        setDay = p3dayOfMonth
+        setMonth = p2month
+        hourOfDay = calendar.get(Calendar.HOUR)
+        minute = calendar.get(Calendar.MINUTE)
 
-        val dateFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
-        dueDateTextView.text = dateFormat.format(calendar.time)
+        val timePickerDialog =
+            TimePickerDialog(this, this, hourOfDay, minute,false)
+        timePickerDialog.show()
 
-        dueDateInMillis = calendar.timeInMillis
+
 
     }
 
     override fun onTimeSet(p0: TimePicker?, p1: Int, p2: Int) {
         val calendar = Calendar.getInstance()
-        calendar.set(p1,p2)
-      /*  val dateFormat = SimpleDateFormat("hh:mm:ss")
-        val string = dateFormat.format(calendar.time)*/
+        setHourOfDay = p1
+        setMinute = p2
+
+        val dateFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
+        dueDateTextView.text = dateFormat.format(calendar.time)
+
+
+
+        calendar.set(setYear,setMonth,setDay,setHourOfDay,setMinute)
+        dueDateInMillis = calendar.timeInMillis
+
+        /*  val dateFormat = SimpleDateFormat("hh:mm:ss")
+          val string = dateFormat.format(calendar.time)*/
 var timeSign : String =""
         if (p1 == 0) {
 
@@ -149,13 +165,11 @@ var timeSign : String =""
             timeSign = "AM";
         }
 
-        val timeString = "$p1:$p2$timeSign"
-        hourOfDay = p1
-        minute = p2
+        val timeString = "Date: $setDay/$setMonth/$setYear ,Time:$setHourOfDay:$setMinute$timeSign"
+
         dueDateTextView.text = timeString
      /*   dateFormat.format(calendar.time).also { dueDateTextView.text = it
       }*/
-
 
 
     }
@@ -174,12 +188,10 @@ var timeSign : String =""
             hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
             minute = calendar.get(Calendar.MINUTE)
 
-            dueDateInMillis = calendar.timeInMillis
-            val timePickerDialog = TimePickerDialog(this,this,hourOfDay,minute,false)
-            timePickerDialog.show()
-          /*  val datePickerDialog =
+         //   dueDateInMillis = calendar.timeInMillis
+          val datePickerDialog =
                 DatePickerDialog(this, this, year, month,day)
-            datePickerDialog.show()*/
+            datePickerDialog.show()
         }
 
 
@@ -187,7 +199,7 @@ var timeSign : String =""
 
     private fun addLetter(title: String, letterContent: String) {
 viewModel.save(title,letterContent)
-        viewModel.setExpirationTime(hourOfDay,minute)
+        viewModel.setExpirationTime(setHourOfDay,setMinute)
     }
 
 

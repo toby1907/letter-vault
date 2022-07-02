@@ -11,7 +11,10 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.developers.lettervault.R
 import com.google.developers.lettervault.data.Letter
 import com.google.developers.lettervault.ui.add.AddLetterActivity
+import com.google.developers.lettervault.ui.add.AddLetterViewModel
 import com.google.developers.lettervault.ui.detail.LetterDetailActivity
+import com.google.developers.lettervault.ui.detail.LetterDetailViewModel
+import com.google.developers.lettervault.ui.detail.LetterDetailViewModelFactory
 import com.google.developers.lettervault.ui.list.ListActivity
 import com.google.developers.lettervault.ui.setting.SettingActivity
 import com.google.developers.lettervault.util.DataViewModelFactory
@@ -20,16 +23,27 @@ import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.content_home.*
 
 class HomeActivity : AppCompatActivity() {
+    private lateinit var viewModel: HomeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
         setSupportActionBar(toolbar)
+
+        val factory = DataViewModelFactory(this)
+        viewModel = ViewModelProviders.of(this, factory).get(HomeViewModel::class.java)
+
+            viewModel.recentLetter.observe(this){letterList ->
+
+                showRecent( letterList.get(letterList.lastIndex))
+
     }
 
     /**
      * Display letter data in the view.
      */
+
+    }
     private fun showRecent(letter: Letter?) {
         if (letter == null) {
             content.text = getString(R.string.no_letter)

@@ -13,6 +13,7 @@
     <string name="subject">Subject</string>
     <string name="add_a_message">Add a Message</string>
     <string name="time">Time</string>
+    <string name="set_time_date"> set time &amp; date</string>
     <string name="title_opened">Opened:\n%1$s</string>
     <string name="title_opening">Opening: %1$s</string>
     <string name="letter_opening">Letter opening at:\n%1$s</string>

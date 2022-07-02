@@ -30,6 +30,7 @@ class AddLetterViewModel(private val dataRepository: DataRepository) : ViewModel
             created = created,
             expires = expires
         )
+
         dataRepository.save(letter)
         _saved.value = Event(true)
         Log.i("saved", saved.toString())

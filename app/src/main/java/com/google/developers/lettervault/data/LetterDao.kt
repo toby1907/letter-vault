@@ -24,6 +24,8 @@ interface LetterDao {
     fun insert(letter: Letter):Long
 @Insert
     fun insetAll(vararg letter: Letter)
+   @Query("SELECT * FROM `letter.db` ORDER BY letter_created DESC LIMIT 1")
+   fun getRecentLetterAdded(): LiveData<Letter>
 @Update
     fun update(letter: Letter)
 @Delete

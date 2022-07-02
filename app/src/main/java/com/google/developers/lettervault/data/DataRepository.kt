@@ -61,7 +61,8 @@ return LivePagedListBuilder(pagingSource, PAGING_CONFIG).build()
 
     }
 
-    fun delete(letter: Letter) {
+    fun delete(letter: Letter) = executeThread {
+letterDao.delete(letter)
     }
 
     /**
@@ -71,7 +72,9 @@ return LivePagedListBuilder(pagingSource, PAGING_CONFIG).build()
     fun save(letter: Letter) = executeThread {
         letterDao.insert(letter)
     }
-
+fun getRecentLetter() :LiveData<List<Letter>>{
+    return letterDao.getRecentLetter()
+}
     /**
      * Update database with a decode letter content and update the opened timestamp.
      */
