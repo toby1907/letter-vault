@@ -23,6 +23,7 @@ class LetterViewModel(private val dataRepository: DataRepository) : ViewModel() 
 
 
 
+
     init {
         // Set default state value.
         _filter.value = LetterState.ALL

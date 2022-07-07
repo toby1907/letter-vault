@@ -5,6 +5,7 @@ import java.util.concurrent.Executors
 const val LETTER_ID = "LETTER_ID"
 const val NOTIFICATION_CHANNEL_ID = "notify-letter"
 const val NOTIFICATION_ID = 32
+const val WORK_NAME = "Notification_work"
 
 private val SINGLE_EXECUTOR = Executors.newSingleThreadExecutor()
 

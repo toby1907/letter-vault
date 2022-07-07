@@ -3,8 +3,15 @@ package com.google.developers.lettervault
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.google.developers.lettervault.notification.NotificationWorker
 import com.google.developers.lettervault.util.NightMode
+import com.google.developers.lettervault.util.WORK_NAME
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 /**
  * Base class for the application defined in AndroidManifest.
@@ -25,5 +32,26 @@ class LetterApplication : Application() {
             val mode = NightMode.valueOf(this.toUpperCase(Locale.US))
             AppCompatDelegate.setDefaultNightMode(mode.value)
         }
+
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+
+        val isOn = sharedPreferences.getBoolean("key_notification",false)
+        if(isOn){
+            val constraints = Constraints.Builder()
+                .setRequiresBatteryNotLow(true)
+                .build()
+            val repeatingRequest = PeriodicWorkRequestBuilder<NotificationWorker>(
+                15, TimeUnit.MINUTES
+            )
+                .setConstraints(constraints)
+                .build()
+            val workManager = WorkManager.getInstance(applicationContext)
+        workManager.enqueueUniquePeriodicWork(
+            WORK_NAME,ExistingPeriodicWorkPolicy.KEEP,
+            repeatingRequest
+
+        )
+        }
+
     }
 }

@@ -49,5 +49,8 @@
     <string name="menu_future">Future</string>
     <string name="menu_all">All</string>
     <string name="menu_opened">Opened</string>
+    <string name="channel_name">Letter Channel</string>
+    <string name="channel_description">Channel for Letter Notification</string>
+    <string name="ready_letter_title">Your Letter is Ready to open</string>
 
 </resources>
