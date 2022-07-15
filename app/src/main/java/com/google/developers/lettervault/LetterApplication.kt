@@ -2,12 +2,17 @@ package com.google.developers.lettervault
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ViewModelProviders
 import androidx.preference.PreferenceManager
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.developers.lettervault.data.DataRepository
+import com.google.developers.lettervault.data.LetterState
 import com.google.developers.lettervault.notification.NotificationWorker
+import com.google.developers.lettervault.ui.list.LetterViewModel
+import com.google.developers.lettervault.util.DataViewModelFactory
 import com.google.developers.lettervault.util.NightMode
 import com.google.developers.lettervault.util.WORK_NAME
 import java.util.Locale
@@ -21,8 +26,10 @@ import java.util.concurrent.TimeUnit
  */
 class LetterApplication : Application() {
 
+
     override fun onCreate() {
         super.onCreate()
+
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         preferences.getString(
@@ -32,6 +39,8 @@ class LetterApplication : Application() {
             val mode = NightMode.valueOf(this.toUpperCase(Locale.US))
             AppCompatDelegate.setDefaultNightMode(mode.value)
         }
+
+
 
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
 

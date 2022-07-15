@@ -55,6 +55,12 @@ class DataRepository(private val letterDao: LetterDao) {
 return LivePagedListBuilder(pagingSource, PAGING_CONFIG).build()
     }
 
+    fun getLetterId (){
+        val letterState = LetterState.ALL
+        getLetters(letterState)
+
+    }
+
     fun getLetter(id: Long): LiveData<Letter> {
       return  letterDao.getLetter(id)
        // throw NotImplementedError("needs implementation")
@@ -102,5 +108,8 @@ fun getRecentLetter() :LiveData<List<Letter>>{
             simpleQuery.append("WHERE opened IS NOT 0")
         }
         return SimpleSQLiteQuery(simpleQuery.toString())
+    }
+    fun getAllLetters() : List<Letter> {
+      return  letterDao.getAllLetters()
     }
 }

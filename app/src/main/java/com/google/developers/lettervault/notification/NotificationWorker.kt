@@ -4,32 +4,28 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
-import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import android.os.Build
 import android.preference.PreferenceManager
-import android.provider.SyncStateContract
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.res.TypedArrayUtils.getString
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.developers.lettervault.R
 import com.google.developers.lettervault.data.DataRepository
-import com.google.developers.lettervault.data.LetterState
+import com.google.developers.lettervault.data.Letter
 import com.google.developers.lettervault.ui.detail.LetterDetailActivity
 import com.google.developers.lettervault.util.LETTER_ID
 import com.google.developers.lettervault.util.NOTIFICATION_CHANNEL_ID
-import com.google.developers.lettervault.util.NOTIFICATION_ID
 
 /**
  * Run a work to show a notification on a background thread by the {@link WorkManger}.
  */
 class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params) {
 
-    private val letterId: Long = inputData.getLong(LETTER_ID, 0)
+    private var letterId: Long = 0
+        //inputData.getLong(LETTER_ID, 0)
 
     /**
      * Create an intent with extended data to the letter.
@@ -50,14 +46,18 @@ class NotificationWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, p
             applicationContext.getString(R.string.pref_key_notify),
             false
         )
-        if(shouldNotify){
+        if(shouldNotify) {
 
-/* val dataRepository = DataRepository.getInstance(applicationContext)
+            val dataRepository = DataRepository.getInstance(applicationContext)
 
-            val letterState = LetterState.ALL
-           val letters = dataRepository?.getLetters(letterState)*/
-createNotificationChannel()
-val resources = applicationContext.resources
+
+           letterId = dataRepository?.getAllLetters()?.filter {
+                readyletter(it)
+            }?.last()?.id ?:0
+
+
+            createNotificationChannel()
+            val resources = applicationContext.resources
             val notification = NotificationCompat
                 .Builder(applicationContext, NOTIFICATION_CHANNEL_ID)
                 .setTicker(resources.getString(R.string.ready_letter_title))
@@ -87,8 +87,12 @@ val resources = applicationContext.resources
             }
             // Register the channel with the system
             NotificationManagerCompat.from(applicationContext).createNotificationChannel(channel)
+
         }
     }
+    private fun readyletter(letter: Letter):Boolean{
+return letter.expires <= System.currentTimeMillis()
 
+    }
 }
 

@@ -31,4 +31,6 @@ interface LetterDao {
 @Delete
     fun delete(letter: Letter)
 
+    @Query("SELECT * FROM `letter.db`")
+    fun getAllLetters(): List<Letter>
 }
